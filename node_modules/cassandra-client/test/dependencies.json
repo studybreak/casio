@@ -1,0 +1,13 @@
+{
+  "cassandra": {
+    "cmd": ["test/cass.sh"],
+    "cwd": ["__dirname", ".."],
+    "log_file": "test-cassandra.log",
+    "wait_for": "socket",
+    "wait_for_options": {
+      "host": "127.0.0.1",
+      "port": 19170
+    },
+    "timeout": 10000
+  }
+}
