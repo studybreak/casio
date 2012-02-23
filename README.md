@@ -1,9 +1,12 @@
 Modeling
 ========
 
-> var Keyboard = Casio.model('Keyboard')
+> var Keyboard = Casio.model('Keyboard');
+>
 > Keyboard.property('key', {
-> 	primary:true
+>
+> primary:true
+>
 > })
 
 
