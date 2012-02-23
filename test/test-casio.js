@@ -49,6 +49,9 @@ exports.setUp = function(callback){
 
 
 exports.tearDown = function (callback) {
+    // todo: drop the casio keyspace
+
+
     // set timeout to give 'npm test' a few seconds 
     // to do its thing
     setTimeout(function(){        
