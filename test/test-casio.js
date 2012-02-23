@@ -72,6 +72,27 @@ exports.test_user_create= function(test){
     test.done();
 }
 
+exports.test_user_count= function(test){
+    async.series([
+        function(next){
+            model.User.count(function(err, results){
+                console.log(results);
+                next();
+            })
+        },
+        function(next){
+            model.User.count(['email=:email', {email:'dirty@hairy.com'}], 
+                function(err, results){
+                    console.log(results);
+                    next();
+            })
+        },
+    ], function(err, results){
+        test.done()
+    });
+    
+}
+
 
 exports.test_user_find=function(test){
     async.series([
