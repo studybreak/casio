@@ -66,7 +66,7 @@ var USER_OBJECTS = [
     
 ]
 
-
+//////////////////////////////
 function createUsers(callback){
     var order = []
     _.each(USER_OBJECTS, function(props){
@@ -89,9 +89,6 @@ function createUsers(callback){
 }
 
 
-
-
-
 //////////////////////////////
 
 function checkClient(){
@@ -105,6 +102,9 @@ function checkClient(){
     }
     console.log('Clients connected:', connected, '/', total);
 }
+//////////////////////////////
+
+
 
 exports.setUp = function(callback){
     // give the clients time to connect;
@@ -183,13 +183,12 @@ exports.test_user_find=function(test){
                     console.log(err);
                     throw new Error(err);
                 }
-                if (users) {
-                    console.log('--- Users ---')
-                    console.log(users);
-                }
+                test.equal(users.length, 1)
                 next();
         })        
     });
+    
+    // test returning query as a completely differnt class
     order.push(function(next){
         model.User.find({
                 columns: ['first_name', 'last_name'],
@@ -200,14 +199,45 @@ exports.test_user_find=function(test){
                     console.log(err);
                     throw new Error(err);
                 }
-                if (users) {
-                    console.log('--- Users as UserShort ---')
-                    console.log(users);
-                }
+                var user = users[0];
+                test.equal(user._type, 'UserShort')                
+                
                 next();
         })
     
     });
+    
+    // instance delete
+    order.push(function(next){
+        var user = USERS[USERS.length-1]
+        
+        user.delete(function(err, results){
+            
+            test.strictEqual(results.success, true);
+            test.equal(user.isDeleted(), true)
+            next();
+        });
+    });    
+    
+    order.push(function(next){
+        model.User.find({
+                columns: ['*'],
+                // where: ['email = :email', {email:'dirty@hairy.com'}],
+            }, function(err, users){
+                if (err) {
+                    console.log(err);
+                    throw new Error(err);
+                }
+                test.equal(users.length, USERS.length - 1)
+                next();
+        })
+    
+    });    
+    
+    
+    
+    
+    
     async.series(order, function(err, results){
         test.done()
     })    

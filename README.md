@@ -4,10 +4,11 @@ This is a model layer and CQL generator which uses the node-cassandra-client pro
 
 Caveats
 -------
-- This is still alpha-only.
+- **This is alphaware**
+- Missing has many and has one relationships
 - Missing more complete tests
-- Has many and has one relationships aren't supported
 - Missing validation hooks
+- Missing event hooks
 
 Modeling
 --------
@@ -74,6 +75,11 @@ or...
 
 Notes
 =====
+
+Primary Keys
+------------
+Right now, the primary key must be the first property defined for a model. Otherwise, the CQL insert statement column ordering is going to be off.
+
 
 BigInt
 ------
