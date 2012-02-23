@@ -10,7 +10,7 @@ Caveats
 - Has many and has one relationships aren't supported
 
 Modeling
-========
+--------
 
 As of now, the only default_validation types supported are:
 
@@ -57,7 +57,7 @@ Keyboard.instanceMethods({
 ~~~
 
 Test Suite
-==========
+----------
 - Pre-requisites: Standalone Cassandra server running on localhost:9160
 - Creates a keyspace called casio
 
