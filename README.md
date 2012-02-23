@@ -56,22 +56,21 @@ Keyboard.instanceMethods({
 })
 ~~~
 
+See test/model and test/keyspaces for more examples.
+
 Test Suite
 ----------
 Pre-requisites: 
 
 - Standalone Cassandra server running on localhost:9160
-- See test/model for examples
 
 To run:
  
-
 - `npm test`
 
 or...
 
 - `./test/testsuite.sh`
-
 
 Notes
 =====
