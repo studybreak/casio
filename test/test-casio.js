@@ -8,7 +8,7 @@ var async = require('async');
 //////////////////////////////
 var now = new Date().getTime()
 var USER = new model.User({
-    userId: new Date().getTime() + '-' + new Cassandra.UUID().toString(),
+    // userId: new Date().getTime() + '-' + new Cassandra.UUID().toString(),
     name:'Dirty Harry ' + now,
     first_name:'Dirty',
     last_name:'Harry ' + now,
@@ -49,7 +49,8 @@ exports.setUp = function(callback){
 
 
 exports.tearDown = function (callback) {
-    // clean up
+    // set timeout to give 'npm test' a few seconds 
+    // to do its thing
     setTimeout(function(){        
         process.exit(0);
     }, 2000);
@@ -61,6 +62,13 @@ exports.test_user_something= function(test){
     test.equal(model.User.something(), 'this is something;')
     test.done();
 }
+
+exports.test_user_create= function(test){
+    // test the class method was attached
+    // test.equal(model.User.something(), 'this is something;')
+    test.done();
+}
+
 
 exports.test_user_find=function(test){
     async.series([
@@ -156,6 +164,26 @@ exports.test_user_get=function (test){
         test.done();
     })
 }
+
+exports.test_user_update = function(test){
+
+    var order = [];
+    order.push(function(next){
+        
+        USER.first_name = 'Max';
+        USER.update({last_name:'Amillion'}, function(err, results){
+           next() 
+        });
+    });
+    
+    async.series(order, function(err, results){
+        test.done();
+    })
+    
+    
+}
+
+
 
 // function test_create_indicies(){
 //     User.createIndicies();
