@@ -1,5 +1,21 @@
+Casio
+=====
+Right now, this is model layer and CQL generator which uses the node-cassandra-client project.
+
+Caveats
+-------
+- This is still alpha-only.
+- Missing some crucial tests
+- Don't use just yet
+- Has many and has one relationships aren't supported
+
 Modeling
 ========
+
+As of now, the only default_validation types supported are:
+
+- text
+- counter (enables support for incr/decr columns)
 
 With a ColumnFamily definition of:
 
