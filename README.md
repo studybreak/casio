@@ -1,14 +1,14 @@
 Modeling
 ========
+Examples
 
-> var Keyboard = Casio.model('Keyboard');
->
-> Keyboard.property('key', {
->
-> primary:true
->
-> })
+~~~
+var Keyboard = Casio.model('Keyboard');
 
+Keyboard.property('key', {
+	primary:true
+})
+~~~
 
 Test Suite
 ==========
