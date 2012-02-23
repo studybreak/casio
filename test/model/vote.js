@@ -16,11 +16,7 @@ var options = {
 
 var Vote = Casio.model('Vote', options);
 
-Vote.connect(function(err, results){
-    console.log('client connected');
-    if (err) console.log(err);
-    if (results) console.log(results);
-});
+Vote.connect();
 
 Vote.property('key', String, {
     primary:true

@@ -6,19 +6,91 @@ var async = require('async');
 
 
 //////////////////////////////
-var now = new Date().getTime()
-var USER = new model.User({
-    // userId: new Date().getTime() + '-' + new Cassandra.UUID().toString(),
-    name:'Dirty Harry ' + now,
-    first_name:'Dirty',
-    last_name:'Harry ' + now,
-    birthday:'06/19/1974',
-    gender:'M',
-    state:'CA',
-    email:'dirty@hairy.com',
-    visits:0,
-    is_admin: true
-});
+var USER, USERS = [];
+var USER_OBJECTS = [
+    {
+        name:'Dirty Harry',
+        first_name:'Dirty',
+        last_name:'Harry',
+        birthday:'12/23/1971',
+        gender:'M',
+        state:'CA',
+        email:'dirty@hairy.com',
+        visits:0,
+        is_admin: true
+    },
+    {
+        name:'Mike Hunt',
+        first_name:'Mike',
+        last_name:'Hunt',
+        birthday:'01/01/1979',
+        gender:'M',
+        state:'CA',
+        email:'mike@hunt.com',
+        visits:0,
+        is_admin: true
+    },
+    {
+        name:'Ben Dover',
+        first_name:'Ben',
+        last_name:'Dover',
+        birthday:'11/10/1980',
+        gender:'M',
+        state:'CA',
+        email:'ben@dover.com',
+        visits:15,
+        is_admin: false
+    },
+    {
+        name:'Juwana Bone',
+        first_name:'Juwana',
+        last_name:'Bone',
+        birthday:'8/18/1984',
+        gender:'F',
+        state:'WI',
+        email:'juwana@bone.com',
+        visits:421,
+        is_admin: false
+    },
+    {
+        name:'Oliver Clothesoff',
+        first_name:'Oliver',
+        last_name:'Clothesoff!',
+        birthday:'2/13/1981',
+        gender:'M',
+        state:'KY',
+        email:'oliver@clothesoff',
+        visits:16001,
+        is_admin: false
+    }
+    
+]
+
+
+function createUsers(callback){
+    var order = []
+    _.each(USER_OBJECTS, function(props){
+        order.push(function(next){
+            var user = new model.User(props)
+            user.create(function(err, results){
+                console.log(results)
+                USERS.push(user);
+                next();
+            })
+        })
+    })
+    
+    async.series(order, function(err, results){
+        // set USER
+        USER = USERS[0];
+        callback()
+    })
+
+}
+
+
+
+
 
 //////////////////////////////
 
@@ -37,13 +109,7 @@ function checkClient(){
 exports.setUp = function(callback){
     // give the clients time to connect;
     setTimeout(function(){
-        USER.create(function(err, results){
-            if (err) {
-                console.log(err);
-                throw new Error(err)
-            }
-            callback()
-        })
+        callback();
     }, 100)
 }
 
@@ -73,21 +139,26 @@ exports.test_user_create= function(test){
 }
 
 exports.test_user_count= function(test){
-    async.series([
-        function(next){
-            model.User.count(function(err, results){
+    
+    
+    var order = [];
+    order.push(function(next){
+        createUsers(next);
+    });
+    order.push(function(next){
+        model.User.count(function(err, results){
+            console.log(results);
+            next();
+        })
+    });
+    order.push(function(next){
+        model.User.count(['email=:email', {email:'dirty@hairy.com'}], 
+            function(err, results){
                 console.log(results);
                 next();
-            })
-        },
-        function(next){
-            model.User.count(['email=:email', {email:'dirty@hairy.com'}], 
-                function(err, results){
-                    console.log(results);
-                    next();
-            })
-        },
-    ], function(err, results){
+        })
+    })
+    async.series(order, function(err, results){
         test.done()
     });
     
@@ -95,96 +166,106 @@ exports.test_user_count= function(test){
 
 
 exports.test_user_find=function(test){
-    async.series([
-        function(next){
-            model.User.find({
-                    // columns:'full_name, birth_year',
-                    // where:['key = :key', {key:1}],
-                    where:['email = :email', {email:'dirty@hairy.com'}],
-                    // start:1,
-                    // limit:10
-                }, function(err, users){
-                    if (err) {
-                        console.log(err);
-                        throw new Error(err);
-                    }
-                    if (users) {
-                        console.log('--- Users ---')
-                        console.log(users);
-                    }
-                    next();
-            })        
-        }, 
-        function(next){
-            model.User.find({
-                    columns: ['first_name', 'last_name'],
-                    where: ['email = :email', {email:'dirty@hairy.com'}],
-                    as: model.UserShort
-                }, function(err, users){
-                    if (err) {
-                        console.log(err);
-                        throw new Error(err);
-                    }
-                    if (users) {
-                        console.log('--- Users as UserShort ---')
-                        console.log(users);
-                    }
-                    next();
-            })
-        
-        }
-    ], function(err, results){
-        
+    
+    var order = [];
+    order.push(function(next){
+        createUsers(next);
+    });
+    order.push(function(next){
+        model.User.find({
+                // columns:'full_name, birth_year',
+                // where:['key = :key', {key:1}],
+                where:['email = :email', {email:'dirty@hairy.com'}],
+                // start:1,
+                // limit:10
+            }, function(err, users){
+                if (err) {
+                    console.log(err);
+                    throw new Error(err);
+                }
+                if (users) {
+                    console.log('--- Users ---')
+                    console.log(users);
+                }
+                next();
+        })        
+    });
+    order.push(function(next){
+        model.User.find({
+                columns: ['first_name', 'last_name'],
+                where: ['email = :email', {email:'dirty@hairy.com'}],
+                as: model.UserShort
+            }, function(err, users){
+                if (err) {
+                    console.log(err);
+                    throw new Error(err);
+                }
+                if (users) {
+                    console.log('--- Users as UserShort ---')
+                    console.log(users);
+                }
+                next();
+        })
+    
+    });
+    async.series(order, function(err, results){
         test.done()
     })    
 }
 
 exports.test_user_get=function (test){
 
-    // Test the setUp user creation here...
-    test.strictEqual(USER.created_at.getTime(), USER.updated_at.getTime())
+
+    var order = [];
+    order.push(function(next){
+        createUsers(next);
+    });
     
-    async.series([
-
-        function(next){
-            
-            // get the user we created during setUp...
-            model.User.get(USER.userId, function(err, user){
-                if (err) console.log(err);
-                if (user) {
-                    console.log('--- User---')
-                    console.log(user);
-
-                    // test booleans
-                    test.equal(USER.is_admin, true)
-                    test.equal(USER._props.is_admin, true)
-
-                    // test instance method was properly set
-                    test.strictEqual(USER.hello(), 'Hello, ' + USER.first_name + ' ' + USER.last_name + ' (' + USER.email + ')');
-                }
-                next();
-            });
+    order.push(function(next){
+        test.strictEqual(USER.created_at.getTime(), USER.updated_at.getTime())
+        next();
+    })
+    
+    order.push(function(next){
         
-        },
-        function(next){
-            
-            // get the short version of the user we created during setUp...
-            model.User.get({
-                userId: USER.userId,
-                columns:['first_name', 'last_name'],
-                as: model.UserShort,
-            }, function(err, userShort){
-                if (err) console.log(err);
-                if (userShort){
-                    console.log('--- UserShort ---')
-                    console.log(userShort);
-                    console.log(userShort.hello())
-                };
-                next();
-            });
+        // get the user we created during setUp...
+        model.User.get(USER.userId, function(err, user){
+            if (err) console.log(err);
+            if (user) {
+                console.log('--- User---')
+                console.log(user);
+
+                // test booleans
+                test.equal(USER.is_admin, true)
+                test.equal(USER._props.is_admin, true)
+
+                // test instance method was properly set
+                test.strictEqual(USER.hello(), 'Hello, ' + USER.first_name + ' ' + USER.last_name + ' (' + USER.email + ')');
+            }
+            next();
+        });
+    
+    });
+    order.push(function(next){
         
-        }
-    ], function(err, results){
+        // get the short version of the user we created during setUp...
+        model.User.get({
+            userId: USER.userId,
+            columns:['first_name', 'last_name'],
+            as: model.UserShort,
+        }, function(err, userShort){
+            if (err) console.log(err);
+            if (userShort){
+                console.log('--- UserShort ---')
+                console.log(userShort);
+                console.log(userShort.hello())
+            };
+            next();
+        });
+    
+    });
+    
+    async.series(order, function(err, results){
         test.done();
     })
 }
@@ -192,6 +273,11 @@ exports.test_user_get=function (test){
 exports.test_user_update = function(test){
 
     var order = [];
+    
+    order.push(function(next){
+        createUsers(next);
+    })
+
     order.push(function(next){
         
         USER.first_name = 'Max';
@@ -199,6 +285,63 @@ exports.test_user_update = function(test){
            next() 
         });
     });
+    
+    async.series(order, function(err, results){
+        test.done();
+    })
+    
+    
+}
+
+exports.test_user_delete = function(test){
+
+    var order = [];
+    var user2, user3;
+
+    order.push(function(next){
+        createUsers(function(err, results){
+            user2 = USERS[USERS.length - 2];    
+            user3 = USERS[USERS.length - 1];
+            next();
+        });
+    })
+
+    // instance delete
+    order.push(function(next){
+        user2.delete(function(err, results){
+            
+            test.strictEqual(results.success, true);
+            test.equal(user2.isDeleted(), true)
+            next();
+        });
+    });
+    
+    // did the instance delete work?
+    order.push(function(next){
+        model.User.get(user2.userId, function(err, user){
+            test.strictEqual(user, null);
+            next();
+        })
+    
+    });
+    
+    // static delete
+    order.push(function(next){
+        model.User.delete(user3.userId, function(err, results){
+
+            test.strictEqual(results.success, true);
+            next();
+        })
+        
+    });
+    // did the static delete work?
+    order.push(function(next){
+        model.User.get(user3.userId, function(err, user){
+            test.strictEqual(user, null);
+            next();
+        })
+    
+    })
     
     async.series(order, function(err, results){
         test.done();

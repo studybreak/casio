@@ -16,12 +16,7 @@ var options = {
 
 var User = Casio.model('User', options);
 
-User.connect(function(err, results){
-    console.log('client connected');
-    if (err) console.log(err);
-    if (results) console.log(results);
-
-});
+User.connect();
 
 User.property('userId', String, {
     primary:true
