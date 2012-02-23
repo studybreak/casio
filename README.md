@@ -1,3 +1,10 @@
+Modeling
+========
+
+> var Keyboard = Casio.model('Keyboard')
+> Keyboard.property('key', {
+> 	primary:true
+> })
 
 
 Test Suite
@@ -15,7 +22,7 @@ Notes
 BigInt
 ------
 in order to support bigints out of the box the cassandra-client connections must enable them.
-the casio library doesn't currently support them
+still trying to figure out the best way to support these.
 
 Unique Columns
 --------------
