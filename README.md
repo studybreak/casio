@@ -1,6 +1,6 @@
-Casio
+Casio 
 =====
-Right now, this is model layer and CQL generator which uses the node-cassandra-client project.
+This is a model layer and CQL generator which uses the node-cassandra-client project.
 
 Caveats
 -------
