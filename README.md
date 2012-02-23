@@ -5,9 +5,9 @@ This is a model layer and CQL generator which uses the node-cassandra-client pro
 Caveats
 -------
 - This is still alpha-only.
-- Missing some crucial tests
-- Don't use just yet
+- Missing more complete tests
 - Has many and has one relationships aren't supported
+- Missing validation hooks
 
 Modeling
 --------
