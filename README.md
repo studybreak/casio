@@ -58,12 +58,20 @@ Keyboard.instanceMethods({
 
 Test Suite
 ----------
-- Pre-requisites: Standalone Cassandra server running on localhost:9160
-- Creates a keyspace called casio
+Pre-requisites: 
 
-	`./test/testsuite.sh`
-
+- Standalone Cassandra server running on localhost:9160
 - See test/model for examples
+
+To run:
+ 
+
+- `npm test`
+
+or...
+
+- `./test/testsuite.sh`
+
 
 Notes
 =====
