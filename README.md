@@ -1,12 +1,42 @@
 Modeling
 ========
-Examples
+
+With a ColumnFamily definition of:
+
+~~~
+
+CREATE COLUMNFAMILY Keyboard (
+    id text PRIMARY KEY,
+    make text,
+    model text,
+    serial int,
+    works boolean,
+    created_at timestamp,
+    updated_at timestamp
+) WITH default_validation=text AND comparator=text;
+
+~~~
+
+You would have a Model definition as follows:
 
 ~~~
 var Keyboard = Casio.model('Keyboard');
 
-Keyboard.property('key', {
+Keyboard.property('id', String, {
 	primary:true
+});
+
+Keyboard.property('make', String, {});
+Keyboard.property('model', String, {});
+Keyboard.property('serial', Number, {});
+Keyboard.property('works', Boolean, {});
+
+Keyboard.classMethods({
+	....
+})
+
+Keyboard.instanceMethods({
+	....
 })
 ~~~
 
