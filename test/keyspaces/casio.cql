@@ -27,3 +27,7 @@ CREATE COLUMNFAMILY Vote (
     up counter,
     down counter
 ) WITH default_validation=counter AND comparator=text;
+
+CREATE COLUMNFAMILY Friends (
+    KEY text PRIMARY KEY
+) WITH default_validation=text AND comparator=text;

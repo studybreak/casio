@@ -1,4 +1,5 @@
 var Casio = require('../../').Casio;
+var CQL = require('../../').CQL;
 
 var options = {
 
@@ -38,13 +39,30 @@ User.property('updated_at', Date, {});
 User.classMethods({
     something:function(){
         return "this is something;"
+    },
+    
+    getByEmail:function(email, callback){
+        var q = new CQL('getByEmail');
+        
+        q.select(['*']);
+        q.from('User');
+        q.where('email=:email', {email:email});
+        q.consistency(options.consistency.select);
+        
+        this.cql(q.statement(), [], function(err, users){
+            callback(err, users)
+        })
     }
+
+
+
 });
 
 User.instanceMethods({
     hello:function(){
         return 'Hello, ' + this.first_name + ' ' + this.last_name + ' (' + this.email + ')';
     }
+    
 });
 
 

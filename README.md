@@ -7,8 +7,7 @@ Caveats
 - **This is alphaware**
 - Missing has many and has one relationships
 - Missing more complete tests
-- Missing validation hooks
-- Missing event hooks
+- Assumes all models have a primary key defined (untested otherwise)
 
 Modeling
 --------
@@ -43,8 +42,12 @@ Keyboard.property('id', String, {
 	primary:true
 });
 
-Keyboard.property('make', String, {});
-Keyboard.property('model', String, {});
+Keyboard.property('make', String, {
+	default:'Casio'
+});
+Keyboard.property('model', String, {
+	default:'Casiotone MT-820'
+});
 Keyboard.property('serial', Number, {});
 Keyboard.property('works', Boolean, {});
 
