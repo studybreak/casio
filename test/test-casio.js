@@ -75,7 +75,7 @@ function createUsers(callback){
         order.push(function(next){
             var user = new model.User(props)
             user.create(function(err, results){
-                console.log(results)
+                // console.log(results)
                 USERS.push(user);
                 next();
             })
@@ -166,14 +166,14 @@ exports.test_user_count = function(test){
     });
     order.push(function(next){
         model.User.count(function(err, results){
-            console.log(results);
+            // console.log(results);
             next();
         })
     });
     order.push(function(next){
         model.User.count(['email=:email', {email:'dirty@hairy.com'}], 
             function(err, results){
-                console.log(results);
+                // console.log(results);
                 next();
         })
     })
@@ -456,7 +456,7 @@ exports.test_user_eager = function (test){
         
         }, function(err, user){
             
-            console.log(user)
+            // console.log(user)
             
             
             // test the person loaded
@@ -502,8 +502,8 @@ exports.test_batch = function(test){
     // console.log(cql.statement());
     
     model.User.cql(cql.statement(), [], function(err, results){
-        console.log(err);
-        console.log(results);
+        // console.log(err);
+        // console.log(results);
         
         
         test.done()
@@ -623,7 +623,7 @@ exports.test_friends_range = function(test){
 
         order.push(function(next){
             model.Friends.cql(q.statement(), [], function(err, results){
-                console.log("Done", q.name);
+                // console.log("Done", q.name);
                 next();
             })
         })
