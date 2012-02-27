@@ -8,6 +8,7 @@ USE casio;
 
 CREATE COLUMNFAMILY User (
     userId text PRIMARY KEY,
+    personId text,
     name text,
     first_name text,
     last_name text,
@@ -31,3 +32,23 @@ CREATE COLUMNFAMILY Vote (
 CREATE COLUMNFAMILY Friends (
     KEY text PRIMARY KEY
 ) WITH default_validation=text AND comparator=text;
+
+CREATE COLUMNFAMILY Person (
+    personId text PRIMARY KEY,
+    address1 text,
+    address2 text,
+    city text,
+    state text,
+    zipcode text,
+    created_at timestamp,
+    updated_at timestamp
+) WITH default_validation=text AND comparator=text;
+
+CREATE COLUMNFAMILY Pet (
+    petId text PRIMARY KEY,
+    userId text,
+    name text,
+    created_at timestamp,
+    updated_at timestamp
+) WITH default_validation=text AND comparator=text;
+CREATE INDEX PetUserId ON Pet (userId);
