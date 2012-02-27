@@ -1,8 +1,6 @@
 var Casio = require('../../').Casio;
 var CQL = require('../../').CQL;
 
-var User = require('./user').User;
-
 var options = {
 
     host:'127.0.0.1', 

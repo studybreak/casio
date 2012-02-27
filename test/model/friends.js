@@ -11,4 +11,6 @@ var Friends = Casio.array('Friends', options);
 
 Friends.connect();
 
+// primary defaults to 'key' if not defined
+
 exports.Friends = Friends;

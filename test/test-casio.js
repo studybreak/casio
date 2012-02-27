@@ -414,7 +414,7 @@ exports.test_user_eager = function (test){
 
 
 
-
+    // ADD PETS FOR THIS USER
     order.push(function(next){
 
         var pets = [
@@ -440,6 +440,79 @@ exports.test_user_eager = function (test){
     })
 
 
+    // ADD FRIENDS FOR THIS USER
+    order.push(function(next){
+        
+        var friends
+        var friendsOrder = [];
+        friendsOrder.push(function(friendsNext){
+            
+            // associate these friends with our test user
+            friends = new model.Friends(USER.userId);
+
+            var rows = [
+                {name:'000', value:'Waldo'},
+                {name:'001', value:'George'},
+                {name:'002', value:'Gretyl'},    
+                {name:'003', value:'Henry'},
+                {name:'004', value:'Marge'},
+                {name:'005', value:'Wilson'},    
+                {name:'006', value:'Champ'},
+                {name:'007', value:'Buster'},
+                {name:'008', value:'Ace'},
+                {name:'009', value:'Mike'},
+                {name:'010', value:'Animal'}
+            ];
+            friends.set(rows);
+            friends.create(function(err, results){
+                test.ok(friends.created)
+                test.ok(results.success)
+                friendsNext();
+            })
+        })
+        async.series(friendsOrder, function(err, results){
+            next();
+        })
+    })
+    
+    // ADD GROUPS FOR THIS USER
+    order.push(function(next){
+        
+        var groups
+        var groupsOrder = [];
+        groupsOrder.push(function(groupsNext){
+            
+            // define a brand new groups
+            groups = new model.Groups();
+
+            var rows = [
+                {name:'000', value:'The Eagles'},
+                {name:'001', value:'Night Ranger'},
+                {name:'002', value:'Stryper'},    
+                {name:'003', value:'KISS'},
+                {name:'004', value:'UFO'},
+                {name:'005', value:'Journey'},    
+            ];
+            groups.set(rows);
+            groups.create(function(err, results){
+                test.ok(groups.created)
+                test.ok(results.success)
+                
+                // set our groups on this user...
+                USER.groups = groups;
+                USER.update(function(err, results){
+                    groupsNext();
+                })
+                
+            })
+        })
+        async.series(groupsOrder, function(err, results){
+            next();
+        })
+    })    
+    
+    
+
     // EAGER LOAD USER
     order.push(function(next){    
         model.User.get({
@@ -448,23 +521,41 @@ exports.test_user_eager = function (test){
                 person:{},
                 vote:{},
                 pets:{
-                    cql:{
-                        limit:3
-                    }
+                    cql:{limit:3}
+                },
+                friends:{
+                    cql:{first:3}
+                },
+                groups:{
+                    cql:{first:3}
                 }
             }
         
         }, function(err, user){
             
-            // console.log(user)
-            
-            
+            console.log(user)
+
             // test the person loaded
             test.equal(user.personId, user.person.personId);
             test.equal(user.vote.up, up);
             test.equal(user.vote.down, -(down));
             test.equal(user.pets.length, 3);
+            test.equal(user.friends.rowCount(), 3);
+
+            user.friends.each(function(friend, i){
+                // console.log(i, friend.name, friend.value);
+                test.equal(friend.name, '00' + i.toString())
+            })
+            
+            test.equal(user.friends.first().value, 'Waldo');
+            test.equal(user.friends.last().value, 'Gretyl');
+            test.equal(user.friends.rowCount(), 3);
+
+            test.equal(user.groups.first().value, 'The Eagles')
+            test.equal(user.groups.last().value, 'Stryper')
+            test.equal(user.groups.rowCount(), 3)
             next();
+
         })
     })
     

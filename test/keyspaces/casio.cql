@@ -9,6 +9,7 @@ USE casio;
 CREATE COLUMNFAMILY User (
     userId text PRIMARY KEY,
     personId text,
+    groupsId text,
     name text,
     first_name text,
     last_name text,
@@ -31,6 +32,10 @@ CREATE COLUMNFAMILY Vote (
 
 CREATE COLUMNFAMILY Friends (
     KEY text PRIMARY KEY
+) WITH default_validation=text AND comparator=text;
+
+CREATE COLUMNFAMILY Groups (
+    groupsId text PRIMARY KEY
 ) WITH default_validation=text AND comparator=text;
 
 CREATE COLUMNFAMILY Person (

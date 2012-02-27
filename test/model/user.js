@@ -5,6 +5,7 @@ var Vote = require('./vote').Vote;
 var Person = require('./person').Person;
 var Pet = require('./pet').Pet;
 var Friends = require('./friends').Friends;
+var Groups = require('./groups').Groups;
 
 var options = {
 
@@ -28,7 +29,8 @@ User.property('userId', String, {
     primary:true
 });
 
-User.property('personId', Number, {});
+User.property('personId', String, {});
+User.property('groupsId', String, {});
 User.property('name', String, {});
 User.property('first_name', String, {});
 User.property('last_name', String, {});
@@ -48,9 +50,13 @@ User.belongsTo('person', Person, {
 });
 
 // Define a ModelArray association
-// User.belongsTo('friends', Friends, {
-//     on:'key'
-// });
+User.hasOne('friends', Friends, {});
+
+// Define a ModelArray association
+User.belongsTo('groups', Groups, {
+    fk:'groupsId',
+    on:'groupsId'
+});
 
 User.hasMany('pets', Pet, {
     // defaults

@@ -12,3 +12,4 @@ exports.UserShort = require('./user').UserShort;
 exports.Person = require('./person').Person;
 exports.Vote = require('./vote').Vote;
 exports.Friends = require('./friends').Friends;
+exports.Groups = require('./groups').Groups;
