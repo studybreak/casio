@@ -2,20 +2,35 @@ Casio
 =====
 This is a model layer and CQL generator which uses the node-cassandra-client project.
 
-Caveats
--------
+Caveats Emptor
+--------------
+
 - **This is alphaware**
-- Missing has many and has one relationships
-- Missing more complete tests
 - Assumes all models have a primary key defined (untested otherwise)
 
 Modeling
 --------
 
-As of now, the only default_validation types supported are:
+The library support modeling two types of Objects.
+
+##Model##
+You can think of this a traditional Model in the ORM-sense.
+
+You define a mix of properties and associations.
+
+As of now, the only supported default_validation types are:
 
 - text
 - counter (enables support for incr/decr columns)
+
+##ModelArray##
+This is a wrapper around columnfamily's with an unknown number of columns.
+
+Use this if you need to support SlicePredicate's (i.e. range queries)
+
+It behaves similar to a list and has support for pagination.
+
+##Examples##
 
 With a ColumnFamily definition of:
 
@@ -60,6 +75,11 @@ Keyboard.instanceMethods({
 })
 ~~~
 
+
+
+
+
+
 See test/model and test/keyspaces for more examples.
 
 Test Suite
@@ -79,10 +99,6 @@ or...
 Notes
 =====
 
-Primary Keys
-------------
-Right now, the primary key must be the first property defined for a model. Otherwise, the CQL insert statement column ordering is going to be off.
-
 
 BigInt
 ------
@@ -91,5 +107,6 @@ still trying to figure out the best way to support these.
 
 Unique Columns
 --------------
-not currently supporting unique values
-requires doing a manual lookup if we need to handle them
+Not currently supporting unique values
+Requires doing a manual lookup if you need unique column support
+Will eventually work, but requires validation hooks are in place, first.
