@@ -463,7 +463,6 @@ exports.test_user_eager = function (test){
             test.equal(user.personId, user.person.personId);
             test.equal(user.vote.up, up);
             test.equal(user.vote.down, -(down));
-
             test.equal(user.pets.length, 3);
             next();
         })

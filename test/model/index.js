@@ -1,15 +1,14 @@
-var User = exports.User = require('./user').User;
-
-exports.UserShort = require('./user').UserShort;
-exports.Person = require('./person').Person;
+var User = require('./user').User;
+var Pet = require('./pet').Pet;
 
 // we need to load this here otherwise User never loads.
-var Pet = require('./pet').Pet;
-Pet.hasOne('owner', User, {
-    fk:'userId',    
+Pet.belongsTo('owner', User, {
     on:'userId'
 });
-exports.Pet = Pet;
 
+exports.User = User;
+exports.Pet = Pet;
+exports.UserShort = require('./user').UserShort;
+exports.Person = require('./person').Person;
 exports.Vote = require('./vote').Vote;
 exports.Friends = require('./friends').Friends;

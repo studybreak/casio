@@ -4,6 +4,7 @@ var CQL = require('../../').CQL;
 var Vote = require('./vote').Vote;
 var Person = require('./person').Person;
 var Pet = require('./pet').Pet;
+var Friends = require('./friends').Friends;
 
 var options = {
 
@@ -39,20 +40,24 @@ User.property('is_admin', Boolean, {
     default:false
 });
 
-
-User.hasOne('person', Person, {
-    // defaults
+// Define a Model association
+User.belongsTo('person', Person, {
+    // defaults to
     // fk:'personId',
     // on:'personId'
 });
+
+// Define a ModelArray association
+// User.belongsTo('friends', Friends, {
+//     on:'key'
+// });
 
 User.hasMany('pets', Pet, {
     // defaults
-    // fk:'personId',
-    // on:'personId'
+    // on:'userId'
 });
 
-User.belongsTo('vote', Vote, {
+User.hasOne('vote', Vote, {
     on:'key'
 });
 
