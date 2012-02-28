@@ -20,7 +20,8 @@ CREATE COLUMNFAMILY User (
     visits int,
     visited_at timestamp,
     created_at timestamp,
-    updated_at timestamp
+    updated_at timestamp,
+    '~tilde' text
 ) WITH default_validation=text AND comparator=text;
 CREATE INDEX UserEmail ON User (email);
 

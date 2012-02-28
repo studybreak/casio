@@ -145,13 +145,17 @@ exports.test_user_create = function(test){
     order.push(function(next){
         model.User.get(USER.userId, function(err, user){
             if (err) console.log(err);
-
+            
+            // check to see if we inserted our funky property
+            test.ok(user['~tilde'], 'testing');
+            
             // test booleans
-            test.ok(user.userId, USER.userId)
+            test.equal(user.userId, USER.userId);
             next();
         });
 
-    });    
+    });
+    
     async.series(order, function(err, results){
         test.done()
     });
@@ -289,6 +293,7 @@ exports.test_user_get = function (test){
 
 exports.test_user_update = function(test){
 
+    var user;
     var order = [];
     
     order.push(function(next){
@@ -296,12 +301,31 @@ exports.test_user_update = function(test){
     })
 
     order.push(function(next){
-        
-        USER.first_name = 'Max';
-        USER.update({last_name:'Amillion'}, function(err, results){
+        user = USERS[USERS.length - 3];
+        user['~tilde'] = 'testing_update';
+        user.first_name = 'Max';
+        user.update({last_name:'Amillion'}, function(err, results){
            next() 
         });
     });
+    
+    order.push(function(next){
+        
+        model.User.get({
+                userId:user.userId,
+                columns:['*']
+            }, function(err, userGet){
+
+            test.equal(userGet['~tilde'], 'testing_update')
+            test.equal(userGet.first_name, 'Max');
+            test.equal(userGet.last_name, 'Amillion');
+
+            next()
+        })
+        
+    });
+    
+    
     
     async.series(order, function(err, results){
         test.done();
@@ -533,7 +557,7 @@ exports.test_user_eager = function (test){
         
         }, function(err, user){
             
-            console.log(user)
+            // console.log(user)
 
             // test the person loaded
             test.equal(user.personId, user.person.personId);
@@ -590,12 +614,8 @@ exports.test_batch = function(test){
     cql.query(q2);
     cql.query(q3);    
     // console.log(cql.statement());
-    
+    // piggyback off User connection for now
     model.User.cql(cql.statement(), [], function(err, results){
-        // console.log(err);
-        // console.log(results);
-        
-        
         test.done()
     })
     

@@ -18,7 +18,12 @@ var options = {
         insert:'ONE',
         update:'ONE',
         delete:'ONE'
+    },
+
+    get:{
+        start:'', end:'~'
     }
+    
 }
 
 var User = Casio.model('User', options);
@@ -37,6 +42,9 @@ User.property('last_name', String, {});
 User.property('email', String, {});
 User.property('birthday', String, {});
 User.property('gender', String, {});
+User.property('~tilde', String, {
+    default:'testing'
+});
 User.property('visits', Number, {});
 User.property('is_admin', Boolean, {
     default:false
