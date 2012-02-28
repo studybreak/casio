@@ -381,7 +381,6 @@ exports.test_user_delete = function(test){
             test.strictEqual(user, null);
             next();
         })
-    
     })
     
     async.series(order, function(err, results){
