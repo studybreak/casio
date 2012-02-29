@@ -36,7 +36,9 @@ User.property('userId', String, {
 
 User.property('personId', String, {});
 User.property('groupsId', String, {});
-User.property('name', String, {});
+User.property('name', String, {
+  notNull:true
+});
 User.property('first_name', String, {});
 User.property('last_name', String, {});
 User.property('email', String, {});
