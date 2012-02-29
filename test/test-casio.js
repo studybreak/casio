@@ -156,6 +156,20 @@ exports.test_user_create = function(test){
 
     });
     
+    // test validators on create
+    // notNull:true
+    order.push(function(next){
+      var notNull = new model.User({
+        first_name:'Testi',
+        last_name:'Cles'
+      })
+      notNull.create(function(err, results){
+        test.equal(err.name.length, 1);
+        test.equal(results.success, false);
+        next();
+      })
+    });    
+    
     async.series(order, function(err, results){
         test.done()
     });
@@ -324,6 +338,17 @@ exports.test_user_update = function(test){
         })
         
     });
+    
+    // test validators on create
+    // notNull:true
+    order.push(function(next){
+      user.update({name:null}, function(err, results){
+        console.log(err);
+        test.equal(err.name.length, 1);
+        test.equal(results.success, false);
+        next();
+      })
+    });    
     
     
     
