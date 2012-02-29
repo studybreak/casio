@@ -124,7 +124,7 @@ exports.tearDown = function (callback) {
     // to do its thing
     setTimeout(function(){        
         process.exit(0);
-    }, 2000);
+    }, 5000);
     callback();
 }
 
@@ -381,7 +381,6 @@ exports.test_user_delete = function(test){
             test.strictEqual(user, null);
             next();
         })
-    
     })
     
     async.series(order, function(err, results){
