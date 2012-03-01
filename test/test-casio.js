@@ -65,7 +65,7 @@ var USER_OBJECTS = [
         visits:16001,
         is_admin: false
     }
-    
+
 ]
 
 //////////////////////////////
@@ -81,7 +81,7 @@ function createUsers(callback){
             })
         })
     })
-    
+
     async.series(order, function(err, results){
         // set USER
         USER = USERS[0];
@@ -120,9 +120,9 @@ exports.tearDown = function (callback) {
     // todo: drop the casio keyspace
 
 
-    // set timeout to give 'npm test' a few seconds 
+    // set timeout to give 'npm test' a few seconds
     // to do its thing
-    setTimeout(function(){        
+    setTimeout(function(){
         process.exit(0);
     }, 5000);
     callback();
@@ -137,7 +137,7 @@ exports.test_user_something = function(test){
 exports.test_user_create = function(test){
     // test the class method was attached
     // test.equal(model.User.something(), 'this is something;')
-    
+
     var order = [];
     order.push(function(next){
         createUsers(next);
@@ -145,17 +145,17 @@ exports.test_user_create = function(test){
     order.push(function(next){
         model.User.get(USER.userId, function(err, user){
             if (err) console.log(err);
-            
+
             // check to see if we inserted our funky property
             test.ok(user['~tilde'], 'testing');
-            
+
             // test booleans
             test.equal(user.userId, USER.userId);
             next();
         });
 
     });
-    
+
     // test validators on create
     // notNull:true
     order.push(function(next){
@@ -168,16 +168,16 @@ exports.test_user_create = function(test){
         test.equal(results.success, false);
         next();
       })
-    });    
-    
+    });
+
     async.series(order, function(err, results){
         test.done()
     });
 }
 
 exports.test_user_count = function(test){
-    
-    
+
+
     var order = [];
     order.push(function(next){
         createUsers(next);
@@ -189,7 +189,7 @@ exports.test_user_count = function(test){
         })
     });
     order.push(function(next){
-        model.User.count(['email=:email', {email:'dirty@hairy.com'}], 
+        model.User.count(['email=:email', {email:'dirty@hairy.com'}],
             function(err, results){
                 // console.log(results);
                 next();
@@ -198,12 +198,12 @@ exports.test_user_count = function(test){
     async.series(order, function(err, results){
         test.done()
     });
-    
+
 }
 
 
 exports.test_user_find = function(test){
-    
+
     var order = [];
     order.push(function(next){
         createUsers(next);
@@ -214,7 +214,7 @@ exports.test_user_find = function(test){
                 next();
         })
     });
-    
+
     // test returning query as a completely differnt class
     order.push(function(next){
         model.User.find({
@@ -223,24 +223,24 @@ exports.test_user_find = function(test){
                 as: model.UserShort
             }, function(err, users){
                 var user = users[0];
-                test.equal(user._type, 'UserShort')                
+                test.equal(user._type, 'UserShort')
                 next();
         })
-    
+
     });
-    
+
     // instance delete
     order.push(function(next){
         var user = USERS[USERS.length-1]
-        
+
         user.delete(function(err, results){
-            
+
             test.ok(results.success, true);
             test.ok(user.deleted(), true)
             next();
         });
-    });    
-    
+    });
+
     order.push(function(next){
         model.User.find({
                 columns: ['*'],
@@ -249,12 +249,12 @@ exports.test_user_find = function(test){
                 test.equal(users.length, USERS.length - 1)
                 next();
         })
-    
+
     });
-    
+
     async.series(order, function(err, results){
         test.done()
-    })    
+    })
 }
 
 exports.test_user_get = function (test){
@@ -264,17 +264,17 @@ exports.test_user_get = function (test){
     order.push(function(next){
         createUsers(next);
     });
-    
+
     order.push(function(next){
         test.strictEqual(USER.created_at.getTime(), USER.updated_at.getTime())
         next();
     })
-    
+
     order.push(function(next){
-        
+
         // get the user we created during setUp...
         model.User.get(USER.userId, function(err, user){
-            
+
             if (err) console.log(err);
 
             // test booleans
@@ -285,10 +285,10 @@ exports.test_user_get = function (test){
             test.strictEqual(user.hello(), 'Hello, ' + user.first_name + ' ' + user.last_name + ' (' + user.email + ')');
             next();
         });
-    
+
     });
     order.push(function(next){
-        
+
         // get the short version of the user we created during setUp...
         model.User.get({
             userId: USER.userId,
@@ -297,9 +297,9 @@ exports.test_user_get = function (test){
         }, function(err, userShort){
             next();
         });
-    
+
     });
-    
+
     async.series(order, function(err, results){
         test.done();
     })
@@ -309,7 +309,7 @@ exports.test_user_update = function(test){
 
     var user;
     var order = [];
-    
+
     order.push(function(next){
         createUsers(next);
     })
@@ -319,12 +319,12 @@ exports.test_user_update = function(test){
         user['~tilde'] = 'testing_update';
         user.first_name = 'Max';
         user.update({last_name:'Amillion'}, function(err, results){
-           next() 
+           next()
         });
     });
-    
+
     order.push(function(next){
-        
+
         model.User.get({
                 userId:user.userId,
                 columns:['*']
@@ -336,9 +336,9 @@ exports.test_user_update = function(test){
 
             next()
         })
-        
+
     });
-    
+
     // test validators on create
     // notNull:true
     order.push(function(next){
@@ -348,15 +348,15 @@ exports.test_user_update = function(test){
         test.equal(results.success, false);
         next();
       })
-    });    
-    
-    
-    
+    });
+
+
+
     async.series(order, function(err, results){
         test.done();
     })
-    
-    
+
+
 }
 
 exports.test_user_delete = function(test){
@@ -366,7 +366,7 @@ exports.test_user_delete = function(test){
 
     order.push(function(next){
         createUsers(function(err, results){
-            user2 = USERS[USERS.length - 2];    
+            user2 = USERS[USERS.length - 2];
             user3 = USERS[USERS.length - 1];
             next();
         });
@@ -375,22 +375,22 @@ exports.test_user_delete = function(test){
     // instance delete
     order.push(function(next){
         user2.delete(function(err, results){
-            
+
             test.strictEqual(results.success, true);
             test.equal(user2.deleted(), true)
             next();
         });
     });
-    
+
     // did the instance delete work?
     order.push(function(next){
         model.User.get(user2.userId, function(err, user){
             test.strictEqual(user, null);
             next();
         })
-    
+
     });
-    
+
     // static delete
     order.push(function(next){
         model.User.delete(user3.userId, function(err, results){
@@ -398,7 +398,7 @@ exports.test_user_delete = function(test){
             test.strictEqual(results.success, true);
             next();
         })
-        
+
     });
     // did the static delete work?
     order.push(function(next){
@@ -407,18 +407,18 @@ exports.test_user_delete = function(test){
             next();
         })
     })
-    
+
     async.series(order, function(err, results){
         test.done();
     })
-    
-    
+
+
 }
 
 exports.test_user_eager = function (test){
 
     var order = [];
-    var up = 100; 
+    var up = 100;
     var down = 50;
 
     order.push(function(next){
@@ -426,21 +426,21 @@ exports.test_user_eager = function (test){
             next();
         });
     })
-    
+
 
 
 
     // ADD VOTE TO USER
     order.push(function(next){
         var key = USER.userId;
-        
+
         model.Vote.incr(key, 'up', up, function(err, results){
             model.Vote.decr(key, 'down', down, function(err, results){
                 next();
             })
         })
     })
-    
+
     // ADD PERSON TO USER
     order.push(function(next){
 
@@ -451,7 +451,7 @@ exports.test_user_eager = function (test){
             state:'CA',
             zipcode:'94044'
         });
-        
+
         person.create(function(err, results){
             USER.person = person;
             USER.update(function(err, results){
@@ -473,7 +473,7 @@ exports.test_user_eager = function (test){
         ]
         var petsOrder = [];
         _.each(pets, function(p){
-            
+
             // ADD PETS FOR THIS USER
             petsOrder.push(function(petsNext){
                 var pet = new model.Pet(p);
@@ -490,21 +490,21 @@ exports.test_user_eager = function (test){
 
     // ADD FRIENDS FOR THIS USER
     order.push(function(next){
-        
+
         var friends
         var friendsOrder = [];
         friendsOrder.push(function(friendsNext){
-            
+
             // associate these friends with our test user
             friends = new model.Friends(USER.userId);
 
             var rows = [
                 {name:'000', value:'Waldo'},
                 {name:'001', value:'George'},
-                {name:'002', value:'Gretyl'},    
+                {name:'002', value:'Gretyl'},
                 {name:'003', value:'Henry'},
                 {name:'004', value:'Marge'},
-                {name:'005', value:'Wilson'},    
+                {name:'005', value:'Wilson'},
                 {name:'006', value:'Champ'},
                 {name:'007', value:'Buster'},
                 {name:'008', value:'Ace'},
@@ -522,47 +522,47 @@ exports.test_user_eager = function (test){
             next();
         })
     })
-    
+
     // ADD GROUPS FOR THIS USER
     order.push(function(next){
-        
+
         var groups
         var groupsOrder = [];
         groupsOrder.push(function(groupsNext){
-            
+
             // define a brand new groups
             groups = new model.Groups();
 
             var rows = [
                 {name:'000', value:'The Eagles'},
                 {name:'001', value:'Night Ranger'},
-                {name:'002', value:'Stryper'},    
+                {name:'002', value:'Stryper'},
                 {name:'003', value:'KISS'},
                 {name:'004', value:'UFO'},
-                {name:'005', value:'Journey'},    
+                {name:'005', value:'Journey'},
             ];
             groups.set(rows);
             groups.create(function(err, results){
                 test.ok(groups.created)
                 test.ok(results.success)
-                
+
                 // set our groups on this user...
                 USER.groups = groups;
                 USER.update(function(err, results){
                     groupsNext();
                 })
-                
+
             })
         })
         async.series(groupsOrder, function(err, results){
             next();
         })
-    })    
-    
-    
+    })
+
+
 
     // EAGER LOAD USER
-    order.push(function(next){    
+    order.push(function(next){
         model.User.get({
             userId:USER.userId,
             eager:{
@@ -578,9 +578,9 @@ exports.test_user_eager = function (test){
                     cql:{first:3}
                 }
             }
-        
+
         }, function(err, user){
-            
+
             // console.log(user)
 
             // test the person loaded
@@ -594,7 +594,7 @@ exports.test_user_eager = function (test){
                 // console.log(i, friend.name, friend.value);
                 test.equal(friend.name, '00' + i.toString())
             })
-            
+
             test.equal(user.friends.first().value, 'Waldo');
             test.equal(user.friends.last().value, 'Gretyl');
             test.equal(user.friends.rowCount(), 3);
@@ -606,12 +606,12 @@ exports.test_user_eager = function (test){
 
         })
     })
-    
+
     async.series(order, function(err, results){
         test.done();
     })
-    
-    
+
+
 }
 exports.test_batch = function(test){
 
@@ -636,14 +636,14 @@ exports.test_batch = function(test){
     cql.batch('ALL');
     cql.query(q1);
     cql.query(q2);
-    cql.query(q3);    
+    cql.query(q3);
     // console.log(cql.statement());
     // piggyback off User connection for now
     model.User.cql(cql.statement(), [], function(err, results){
         test.done()
     })
-    
-    
+
+
 }
 
 // function test_create_indicies(){
@@ -657,16 +657,16 @@ exports.test_vote_create = function(test){
     var key = USERS[USERS.length-1].userId;
     var vote;
     var order = [];
-    
+
     var i64 = 18446744073709551616;
     var i32 = 9007199254740992;
-    
+
     // var bigint = new Casio.types.BigInteger(i64.toString())
     // console.log(bigint.toString(), i64.toString())
-    
+
     var up = 100; //10;
     var down = 100;
-    
+
     // test static incr method
     order.push(function(next){
         model.Vote.incr(key, 'up', up, function(err, results){
@@ -726,18 +726,18 @@ exports.test_friends_range = function(test){
         var values = [id];
 
         // var args = {'KEY':id}
-        
+
         var key;
         _.each(_.range(1, 1000), function(i){
 
             // var rnd = Math.ceil((Math.random() * 1000) * 86400)
-            // 
+            //
             // var dt = new Date().getTime();
             // key = "'" + (dt + rnd) + ":" + i + "'";
             // args[key] = rnd
 
             // args[i] = i;
-            
+
             var len = i.length;
             var size = 5;
             var s = []
@@ -761,22 +761,22 @@ exports.test_friends_range = function(test){
                 next();
             })
         })
-        
+
     })
 
     // test instance range method
     order.push(function(next){
         friends = new model.Friends(1);
-        
+
         // should return everything!!!
         friends.range({start:null, end:'00010'}, function(err, results){
             test.equal(friends.rowCount(), 10);
             next();
         })
     })
-    
+
     order.push(function(next){
-        
+
         friends.next(10, function(err, results){
             test.equal(friends.rowCount(), 20);
             next();
@@ -787,7 +787,7 @@ exports.test_friends_range = function(test){
     /// TEST PREV
     order.push(function(next){
         friends = new model.Friends(1);
-        
+
         // should return everything!!!
         friends.range({start:'00020', end:'00029'}, function(err, results){
             test.equal(friends.rowCount(), 10);
@@ -796,27 +796,27 @@ exports.test_friends_range = function(test){
     })
 
     order.push(function(next){
-        
+
         friends.prev(10, function(err, results){
 
             test.ok(friends.hasPrev(), true);
             test.equal(friends.rowCount(), 20);
-            
+
             friends.prev(10, function(err, results){
-                
+
                 test.ok(!friends.hasPrev(), true);
                 test.equal(friends.rowCount(), 29);
                 next();
             })
         })
     })
-    
+
     order.push(function(next){
         friends.next(10, function(err, results){
             test.equal(friends.rowCount(), 39);
             next();
         })
-    })    
+    })
 
     async.series(order, function(err, results){
         test.done();
@@ -833,16 +833,16 @@ exports.test_friends_create = function(test){
         var rows = [
             {name:'000', value:'Larry'},
             {name:'001', value:'Curly'},
-            {name:'002', value:'Moe'}        
+            {name:'002', value:'Moe'}
         ];
         friends.set(rows);
         friends.set({'name':'003', 'value':'Curly Joe'});
         friends.set({'name':'001', 'value':'Curly Howard'});
         friends.set({'name':'004', 'value':'Shemp'});
         friends.set({'name':'002', 'value':'Moe Howard'});
-        friends.set({'name':'000', 'value':'Larry Fine'});        
+        friends.set({'name':'000', 'value':'Larry Fine'});
         friends.set({'name':'003', 'value':'Curly Joe'});
-                
+
         friends.create(function(err, results){
             test.ok(friends.created)
             test.ok(results.success)
@@ -851,7 +851,7 @@ exports.test_friends_create = function(test){
     })
     async.series(order, function(err, results){
         test.done();
-    })    
+    })
 }
 
 exports.test_friends_update = function(test){
@@ -876,7 +876,7 @@ exports.test_friends_update = function(test){
 
         var rows = [
             {name:'003', value:'Garry'},
-            {name:'004', value:'Walt'},                    
+            {name:'004', value:'Walt'},
             {name:'000', value:'Tommy'},
             {name:'001', value:'Dickie'},
             {name:'002', value:'Harrison'}
@@ -885,11 +885,11 @@ exports.test_friends_update = function(test){
         friends.update(rows, function(err, results){
             next();
         })
-        
+
     });
 
     order.push(function(next){
-        
+
         // set one for the hell of it...
         friends.set({name:'003', value:'Ozzy Osbourne'});
 
@@ -897,7 +897,7 @@ exports.test_friends_update = function(test){
         friends.update(function(err, results){
             next();
         })
-        
+
     });
 
     order.push(function(next){
@@ -918,7 +918,7 @@ exports.test_friends_update = function(test){
 
     async.series(order, function(err, results){
         test.done();
-    })    
+    })
 
 }
 
@@ -930,8 +930,8 @@ exports.test_friends_delete = function(test){
         {name:'000', value:'Yellowman'},
         {name:'001', value:'Bob Marley'},
         {name:'002', value:'Barrington Levy'}
-    ];    
-    
+    ];
+
     var order = [];
     order.push(function(next){
         friends = new model.Friends();
@@ -942,13 +942,13 @@ exports.test_friends_delete = function(test){
         })
     })
     order.push(function(next){
-        
-        // get rid of yellowman since 
+
+        // get rid of yellowman since
         // he's creepy...
         friends.delete(['000'], function(err, results){
             next();
         })
-        
+
     });
     order.push(function(next){
         friends.reset();
@@ -959,6 +959,6 @@ exports.test_friends_delete = function(test){
     });
     async.series(order, function(err, results){
         test.done();
-    })    
+    })
 
 }
