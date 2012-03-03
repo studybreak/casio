@@ -3,8 +3,7 @@ var CQL = require('../../').CQL;
 
 var options = {
 
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
     use_bigints: true,
     consistency:{
@@ -15,9 +14,8 @@ var options = {
     }
 }
 
-var Person = Casio.model('Person', options);
+var Person = (new Casio(options)).model('Person', options);
 
-Person.connect();
 
 Person.property('personId', String, {
     primary:true

@@ -2,8 +2,7 @@ var Casio = require('../../').Casio;
 
 var options = {
 
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
     use_bigints: true,
     consistency:{
@@ -14,9 +13,8 @@ var options = {
     }
 }
 
-var Vote = Casio.model('Vote', options);
+var Vote = (new Casio(options)).model('Vote', options);
 
-Vote.connect();
 
 Vote.property('key', String, {
     primary:true

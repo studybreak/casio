@@ -2,14 +2,11 @@ var Casio = require('../../').Casio;
 var CQL = require('../../').CQL;
 
 var options = {
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
 }
 
-var Friends = Casio.array('Friends', options);
-
-Friends.connect();
+var Friends = (new Casio(options)).array('Friends', options);
 
 // primary defaults to 'key' if not defined
 

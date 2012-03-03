@@ -9,8 +9,7 @@ var Groups = require('./groups').Groups;
 
 var options = {
 
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
     use_bigints: true,
     consistency:{
@@ -23,12 +22,11 @@ var options = {
     get:{
         start:'', end:'~'
     }
-    
+
 }
 
-var User = Casio.model('User', options);
+var User = (new Casio(options)).model('User', options);
 
-User.connect();
 
 User.property('userId', String, {
     primary:true
@@ -84,15 +82,15 @@ User.classMethods({
     something:function(){
         return "this is something;"
     },
-    
+
     getByEmail:function(email, callback){
         var q = new CQL('getByEmail');
-        
+
         q.select(['*']);
         q.from('User');
         q.where('email=:email', {email:email});
         q.consistency(options.consistency.select);
-        
+
         this.cql(q.statement(), [], function(err, users){
             callback(err, users)
         })
@@ -106,7 +104,7 @@ User.instanceMethods({
     hello:function(){
         return 'Hello, ' + this.first_name + ' ' + this.last_name + ' (' + this.email + ')';
     }
-    
+
 });
 
 
@@ -116,7 +114,7 @@ exports.User = User
 // short version of user
 function UserShort(props){
     this._type = 'UserShort';
-    
+
     for(p in props){
         this[p] = props[p];
     }

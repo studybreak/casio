@@ -3,8 +3,7 @@ var CQL = require('../../').CQL;
 
 var options = {
 
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
     use_bigints: true,
     consistency:{
@@ -15,8 +14,7 @@ var options = {
     }
 }
 
-var Pet = Casio.model('Pet', options);
-Pet.connect();
+var Pet = (new Casio(options)).model('Pet', options);
 
 Pet.property('petId', String, {
     primary:true
@@ -26,10 +24,10 @@ Pet.property('name', String, {});
 Pet.property('created_at', Date, {});
 Pet.property('updated_at', Date, {});
 
-// this needs to be defined on the package definition 
+// this needs to be defined on the package definition
 // to assure the User object loads first...
 // Pet.hasOne('owner', User, {
-//     // fk:'userId',    
+//     // fk:'userId',
 //     // on:'userId'
 // });
 

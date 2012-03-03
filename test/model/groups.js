@@ -2,14 +2,12 @@ var Casio = require('../../').Casio;
 var CQL = require('../../').CQL;
 
 var options = {
-    host:'127.0.0.1', 
-    port:9160, 
+    hosts:['127.0.0.1:9160'],
     keyspace:'casio',
 }
 
-var Groups = Casio.array('Groups', options);
+var Groups = (new Casio(options)).array('Groups', options);
 
-Groups.connect();
 Groups.primary('groupsId');
 //////////////////////////////////////
 exports.Groups = Groups;
