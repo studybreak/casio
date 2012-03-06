@@ -7,25 +7,26 @@ var Pet = require('./pet').Pet;
 var Friends = require('./friends').Friends;
 var Groups = require('./groups').Groups;
 
-var options = {
 
+var conn_options = {
     hosts:['127.0.0.1:9160'],
     keyspace:'casio',
-    use_bigints: true,
+    use_bigints: true
+}
+
+var options = {
     consistency:{
         select:'ONE',
         insert:'ONE',
         update:'ONE',
         delete:'ONE'
     },
-
     get:{
         start:'', end:'~'
     }
-
 }
 
-var User = (new Casio(options)).model('User', options);
+var User = (new Casio(conn_options)).model('User', options);
 
 
 User.property('userId', String, {

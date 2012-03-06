@@ -85,7 +85,7 @@ function createUsers(callback){
     async.series(order, function(err, results){
         // set USER
         USER = USERS[0];
-        callback()
+        callback();
     })
 
 }
@@ -171,7 +171,7 @@ exports.test_user_create = function(test){
     });
 
     async.series(order, function(err, results){
-        test.done()
+        test.done();
     });
 }
 
@@ -196,7 +196,7 @@ exports.test_user_count = function(test){
         })
     })
     async.series(order, function(err, results){
-        test.done()
+        test.done();
     });
 
 }
@@ -210,7 +210,7 @@ exports.test_user_find = function(test){
     });
     order.push(function(next){
         model.User.getByEmail('dirty@hairy.com', function(err, users){
-                test.ok(users.length)
+                test.ok(users.length);
                 next();
         })
     });
@@ -223,7 +223,7 @@ exports.test_user_find = function(test){
                 as: model.UserShort
             }, function(err, users){
                 var user = users[0];
-                test.equal(user._type, 'UserShort')
+                test.equal(user._type, 'UserShort');
                 next();
         })
 
@@ -236,7 +236,7 @@ exports.test_user_find = function(test){
         user.delete(function(err, results){
 
             test.ok(results.success, true);
-            test.ok(user.deleted(), true)
+            test.ok(user.deleted(), true);
             next();
         });
     });
@@ -246,14 +246,14 @@ exports.test_user_find = function(test){
                 columns: ['*'],
                 // where: ['email = :email', {email:'dirty@hairy.com'}],
             }, function(err, users){
-                test.equal(users.length, USERS.length - 1)
+                test.equal(users.length, USERS.length - 1);
                 next();
         })
 
     });
 
     async.series(order, function(err, results){
-        test.done()
+        test.done();
     })
 }
 
@@ -266,7 +266,7 @@ exports.test_user_get = function (test){
     });
 
     order.push(function(next){
-        test.strictEqual(USER.created_at.getTime(), USER.updated_at.getTime())
+        test.strictEqual(USER.created_at.getTime(), USER.updated_at.getTime());
         next();
     })
 
@@ -278,8 +278,8 @@ exports.test_user_get = function (test){
             if (err) console.log(err);
 
             // test booleans
-            test.ok(user.is_admin, true)
-            test.ok(user._props.is_admin, true)
+            test.ok(user.is_admin, true);
+            test.ok(user._props.is_admin, true);
 
             // test instance method was properly set
             test.strictEqual(user.hello(), 'Hello, ' + user.first_name + ' ' + user.last_name + ' (' + user.email + ')');
@@ -319,7 +319,7 @@ exports.test_user_update = function(test){
         user['~tilde'] = 'testing_update';
         user.first_name = 'Max';
         user.update({last_name:'Amillion'}, function(err, results){
-           next()
+           next();
         });
     });
 
@@ -334,7 +334,7 @@ exports.test_user_update = function(test){
             test.equal(userGet.first_name, 'Max');
             test.equal(userGet.last_name, 'Amillion');
 
-            next()
+            next();
         })
 
     });
@@ -343,14 +343,11 @@ exports.test_user_update = function(test){
     // notNull:true
     order.push(function(next){
       user.update({name:null}, function(err, results){
-        console.log(err);
         test.equal(err.name.length, 1);
         test.equal(results.success, false);
         next();
       })
     });
-
-
 
     async.series(order, function(err, results){
         test.done();
@@ -377,7 +374,7 @@ exports.test_user_delete = function(test){
         user2.delete(function(err, results){
 
             test.strictEqual(results.success, true);
-            test.equal(user2.deleted(), true)
+            test.equal(user2.deleted(), true);
             next();
         });
     });
@@ -426,10 +423,7 @@ exports.test_user_eager = function (test){
             next();
         });
     })
-
-
-
-
+    
     // ADD VOTE TO USER
     order.push(function(next){
         var key = USER.userId;
@@ -455,13 +449,11 @@ exports.test_user_eager = function (test){
         person.create(function(err, results){
             USER.person = person;
             USER.update(function(err, results){
-                next()
+                next();
             })
         })
     })
-
-
-
+    
     // ADD PETS FOR THIS USER
     order.push(function(next){
 
@@ -483,11 +475,10 @@ exports.test_user_eager = function (test){
             })
         })
         async.parallel(petsOrder, function(err, results){
-            next()
+            next();
         })
     })
-
-
+    
     // ADD FRIENDS FOR THIS USER
     order.push(function(next){
 
@@ -513,8 +504,8 @@ exports.test_user_eager = function (test){
             ];
             friends.set(rows);
             friends.create(function(err, results){
-                test.ok(friends.created)
-                test.ok(results.success)
+                test.ok(friends.created);
+                test.ok(results.success);
                 friendsNext();
             })
         })
@@ -543,8 +534,8 @@ exports.test_user_eager = function (test){
             ];
             groups.set(rows);
             groups.create(function(err, results){
-                test.ok(groups.created)
-                test.ok(results.success)
+                test.ok(groups.created);
+                test.ok(results.success);
 
                 // set our groups on this user...
                 USER.groups = groups;
@@ -558,9 +549,7 @@ exports.test_user_eager = function (test){
             next();
         })
     })
-
-
-
+    
     // EAGER LOAD USER
     order.push(function(next){
         model.User.get({
@@ -592,20 +581,67 @@ exports.test_user_eager = function (test){
 
             user.friends.each(function(friend, i){
                 // console.log(i, friend.name, friend.value);
-                test.equal(friend.name, '00' + i.toString())
+                test.equal(friend.name, '00' + i.toString());
             })
 
             test.equal(user.friends.first().value, 'Waldo');
             test.equal(user.friends.last().value, 'Gretyl');
             test.equal(user.friends.rowCount(), 3);
 
-            test.equal(user.groups.first().value, 'The Eagles')
-            test.equal(user.groups.last().value, 'Stryper')
-            test.equal(user.groups.rowCount(), 3)
+            test.equal(user.groups.first().value, 'The Eagles');
+            test.equal(user.groups.last().value, 'Stryper');
+            test.equal(user.groups.rowCount(), 3);
             next();
-
+            
         })
     })
+    
+    // TEST Model.find eager loads
+    order.push(function(next){
+        model.User.find({
+            // where:['userId=:key', {key:USER.userId}],
+            eager:{
+                person:{},
+                vote:{},
+                pets:{
+                    cql:{limit:3}
+                },
+                friends:{
+                    cql:{first:3}
+                },
+                groups:{
+                    cql:{first:3}
+                }
+            }
+        }, function(err, users){
+            // console.log(users.length)
+            _.each(users, function(user){
+                if (USER.userId === user.userId){
+
+                    test.equal(user.personId, user.person.personId);
+                    test.equal(user.vote.up, up);
+                    test.equal(user.vote.down, -(down));
+                    test.equal(user.pets.length, 3);
+                    test.equal(user.friends.rowCount(), 3);
+
+                    user.friends.each(function(friend, i){
+                        // console.log(i, friend.name, friend.value);
+                        test.equal(friend.name, '00' + i.toString());
+                    })
+
+                    test.equal(user.friends.first().value, 'Waldo');
+                    test.equal(user.friends.last().value, 'Gretyl');
+                    test.equal(user.friends.rowCount(), 3);
+
+                    test.equal(user.groups.first().value, 'The Eagles');
+                    test.equal(user.groups.last().value, 'Stryper');
+                    test.equal(user.groups.rowCount(), 3);
+                }
+            })
+            next();
+        })
+      
+    });
 
     async.series(order, function(err, results){
         test.done();
@@ -618,18 +654,18 @@ exports.test_batch = function(test){
 
     var q1 = new CQL('q1');
     q1.insert('User');
-    q1.into(['userId', 'name'])
-    q1.values(['1234', 'name name'])
+    q1.into(['userId', 'name']);
+    q1.values(['1234', 'name name']);
 
     var q2 = new CQL('q2');
-    q2.update('User')
-    q2.set({name:'Greg'})
-    q2.where('userId=:userId', {userId:'1234'})
+    q2.update('User');
+    q2.set({name:'Greg'});
+    q2.where('userId=:userId', {userId:'1234'});
 
     var q3 = new CQL('q2');
-    q3.delete([])
-    q3.from('User')
-    q3.where('userId=:userId', {userId:'1234'})
+    q3.delete([]);
+    q3.from('User');
+    q3.where('userId=:userId', {userId:'1234'});
 
 
     var cql = new CQL('batch');
@@ -640,7 +676,7 @@ exports.test_batch = function(test){
     // console.log(cql.statement());
     // piggyback off User connection for now
     model.User.cql(cql.statement(), [], function(err, results){
-        test.done()
+        test.done();
     })
 
 
@@ -689,8 +725,8 @@ exports.test_vote_create = function(test){
             // console.log('---Vote---');
             // console.log(vote);
 
-            test.equal(vote.up, up)
-            test.equal(vote.down, -(down))
+            test.equal(vote.up, up);
+            test.equal(vote.down, -(down));
 
             next();
         })
@@ -698,15 +734,15 @@ exports.test_vote_create = function(test){
     order.push(function(next){
         vote.incr('up', function(err, results){
             vote.decr('down', function(err, results){
-                next()
+                next();
             })
         })
     })
     // test the above was set properly
     order.push(function(next){
         model.Vote.get(key, function(err, vote){
-            test.equal(vote.up, up + 1)
-            test.equal(vote.down, -(down + 1))
+            test.equal(vote.up, up + 1);
+            test.equal(vote.down, -(down + 1));
 
             next();
         })
@@ -744,7 +780,7 @@ exports.test_friends_range = function(test){
             _.each(_.range(0, size - i.toString().length), function(x){
                 s.push('0');
             })
-            s.push(i.toString())
+            s.push(i.toString());
             into.push(s.join(''));
             values.push(i);
 
@@ -753,7 +789,7 @@ exports.test_friends_range = function(test){
         var q = new CQL('inserting into friends: ' + id);
         q.insert('Friends');
         q.into(into);
-        q.values(values)
+        q.values(values);
 
         order.push(function(next){
             model.Friends.cql(q.statement(), [], function(err, results){
@@ -844,8 +880,8 @@ exports.test_friends_create = function(test){
         friends.set({'name':'003', 'value':'Curly Joe'});
 
         friends.create(function(err, results){
-            test.ok(friends.created)
-            test.ok(results.success)
+            test.ok(friends.created);
+            test.ok(results.success);
             next();
         })
     })
@@ -937,7 +973,7 @@ exports.test_friends_delete = function(test){
         friends = new model.Friends();
         friends.set(rows);
         friends.create(function(err, results){
-            test.ok(friends.created)
+            test.ok(friends.created);
             next();
         })
     })
