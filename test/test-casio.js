@@ -165,7 +165,6 @@ exports.test_user_create = function(test){
       })
       notNull.create(function(err, results){
         test.equal(err.name.length, 1);
-        test.equal(results.success, false);
         next();
       })
     });
@@ -235,7 +234,8 @@ exports.test_user_find = function(test){
 
         user.delete(function(err, results){
 
-            test.ok(results.success, true);
+            test.equal(typeof err, 'undefined');
+            test.equal(typeof results, 'undefined');
             test.ok(user.deleted(), true);
             next();
         });
@@ -344,7 +344,7 @@ exports.test_user_update = function(test){
     order.push(function(next){
       user.update({name:null}, function(err, results){
         test.equal(err.name.length, 1);
-        test.equal(results.success, false);
+        test.equal(typeof results, 'undefined');
         next();
       })
     });
@@ -373,7 +373,7 @@ exports.test_user_delete = function(test){
     order.push(function(next){
         user2.delete(function(err, results){
 
-            test.strictEqual(results.success, true);
+            test.equal(typeof err, 'undefined');
             test.equal(user2.deleted(), true);
             next();
         });
@@ -392,7 +392,8 @@ exports.test_user_delete = function(test){
     order.push(function(next){
         model.User.delete(user3.userId, function(err, results){
 
-            test.strictEqual(results.success, true);
+            test.equal(err, null);
+            test.equal(typeof results, 'undefined');
             next();
         })
 
