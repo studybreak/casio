@@ -637,6 +637,8 @@ exports.test_user_eager = function (test){
                     test.equal(user.groups.first().value, 'The Eagles');
                     test.equal(user.groups.last().value, 'Stryper');
                     test.equal(user.groups.rowCount(), 3);
+                    // test toJSON
+                    // console.log(user.toJSON())
                 }
             })
             next();
