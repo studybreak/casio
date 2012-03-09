@@ -11,7 +11,8 @@ var options = {
         insert:'ONE',
         update:'ONE',
         delete:'ONE'
-    }
+    },
+    keyAlias: 'personId'
 }
 
 var Person = (new Casio(options)).model('Person', options);

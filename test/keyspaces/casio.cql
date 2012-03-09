@@ -2,7 +2,7 @@ DROP KEYSPACE casio;
 
 CREATE KEYSPACE casio WITH
     strategy_class=SimpleStrategy AND
-    strategy_options:replication_factor=3;
+    strategy_options:replication_factor=1;
 
 USE casio;
 

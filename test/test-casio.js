@@ -424,7 +424,7 @@ exports.test_user_eager = function (test){
             next();
         });
     })
-    
+
     // ADD VOTE TO USER
     order.push(function(next){
         var key = USER.userId;
@@ -454,7 +454,7 @@ exports.test_user_eager = function (test){
             })
         })
     })
-    
+
     // ADD PETS FOR THIS USER
     order.push(function(next){
 
@@ -479,7 +479,7 @@ exports.test_user_eager = function (test){
             next();
         })
     })
-    
+
     // ADD FRIENDS FOR THIS USER
     order.push(function(next){
 
@@ -550,7 +550,7 @@ exports.test_user_eager = function (test){
             next();
         })
     })
-    
+
     // EAGER LOAD USER
     order.push(function(next){
         model.User.get({
@@ -593,10 +593,10 @@ exports.test_user_eager = function (test){
             test.equal(user.groups.last().value, 'Stryper');
             test.equal(user.groups.rowCount(), 3);
             next();
-            
+
         })
     })
-    
+
     // TEST Model.find eager loads
     order.push(function(next){
         model.User.find({
@@ -641,7 +641,7 @@ exports.test_user_eager = function (test){
             })
             next();
         })
-      
+
     });
 
     async.series(order, function(err, results){
@@ -682,10 +682,6 @@ exports.test_batch = function(test){
 
 
 }
-
-// function test_create_indicies(){
-//     model.User.createIndicies();
-// }
 
 exports.test_vote_create = function(test){
 

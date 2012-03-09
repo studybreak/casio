@@ -23,7 +23,8 @@ var options = {
     },
     get:{
         start:'', end:'~'
-    }
+    },
+    keyAlias: 'userId'
 }
 
 var User = (new Casio(conn_options)).model('User', options);
