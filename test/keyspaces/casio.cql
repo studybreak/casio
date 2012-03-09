@@ -18,6 +18,7 @@ CREATE COLUMNFAMILY User (
     gender text,
     is_admin boolean,
     visits int,
+    access_token text,
     visited_at timestamp,
     created_at timestamp,
     updated_at timestamp,
