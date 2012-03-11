@@ -19,7 +19,8 @@ var USER_OBJECTS = [
         state:'CA',
         email:'dirty@hairy.com',
         visits:0,
-        is_admin: true
+        is_admin: true,
+        access_token:'asdkjhsdasdkl'
     },
     {
         name:'Mike Hunt',
@@ -30,7 +31,8 @@ var USER_OBJECTS = [
         state:'CA',
         email:'mike@hunt.com',
         visits:0,
-        is_admin: false
+        is_admin: false,
+        access_token:'asdkjhsdasdkl'
     },
     {
         name:'Ben Dover',
@@ -41,7 +43,8 @@ var USER_OBJECTS = [
         state:'CA',
         email:'ben@dover.com',
         visits:15,
-        is_admin: false
+        is_admin: false,
+        access_token:'asdkjhsdasdkl'
     },
     {
         name:'Juwana Bone',
@@ -52,7 +55,8 @@ var USER_OBJECTS = [
         state:'WI',
         email:'juwana@bone.com',
         visits:421,
-        is_admin: false
+        is_admin: false,
+        access_token:'asdkjhsdasdkl'
     },
     {
         name:'Oliver Clothesoff',
@@ -63,7 +67,8 @@ var USER_OBJECTS = [
         state:'KY',
         email:'oliver@clothesoff',
         visits:16001,
-        is_admin: false
+        is_admin: false,
+        access_token:'asdkjhsdasdkl'
     }
 
 ]
@@ -506,7 +511,7 @@ exports.test_user_eager = function (test){
             friends.set(rows);
             friends.create(function(err, results){
                 test.ok(friends.created);
-                test.ok(results.success);
+                test.ok(results.created);
                 friendsNext();
             })
         })
@@ -536,7 +541,7 @@ exports.test_user_eager = function (test){
             groups.set(rows);
             groups.create(function(err, results){
                 test.ok(groups.created);
-                test.ok(results.success);
+                test.ok(results.created);
 
                 // set our groups on this user...
                 USER.groups = groups;
@@ -637,8 +642,15 @@ exports.test_user_eager = function (test){
                     test.equal(user.groups.first().value, 'The Eagles');
                     test.equal(user.groups.last().value, 'Stryper');
                     test.equal(user.groups.rowCount(), 3);
+
                     // test toJSON
-                    // console.log(user.toJSON())
+                    var userStr = JSON.parse(user.toString());
+                    // // we need to make sure toJSON worked...
+                    // // it should also leave properties marked with toJSON=false
+                    // //  as undefined...
+                    test.equal(user.toJSON().access_token, undefined);
+                    test.equal(userStr.access_token, undefined);
+
                 }
             })
             next();
@@ -880,7 +892,7 @@ exports.test_friends_create = function(test){
 
         friends.create(function(err, results){
             test.ok(friends.created);
-            test.ok(results.success);
+            test.ok(results.created);
             next();
         })
     })
@@ -901,7 +913,7 @@ exports.test_friends_update = function(test){
             {name:'001', value:'Dick'},
             {name:'002', value:'Harry'}
         ];
-
+        friends.set(rows);
         friends.create(function(err, results){
             test.ok(friends.created)
             next();

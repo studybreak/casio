@@ -52,6 +52,10 @@ User.property('is_admin', Boolean, {
     default:false
 });
 
+User.property('access_token', String, {
+    toJSON:false
+});
+
 // Define a Model association
 User.belongsTo('person', Person, {
     // defaults to
