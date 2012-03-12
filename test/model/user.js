@@ -27,8 +27,15 @@ var options = {
     keyAlias: 'userId'
 }
 
-var User = (new Casio(conn_options)).model('User', options);
+var casio = new Casio(conn_options);
 
+if (process.env.NODE_ENV && process.env.NODE_ENV==='debug'){
+  casio.on('log', function (level, msg, details) {
+    console.log(level, msg);
+  });
+}
+
+var User = casio.model('User', options);
 
 User.property('userId', String, {
     primary:true

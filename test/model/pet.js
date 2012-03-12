@@ -1,11 +1,13 @@
 var Casio = require('../../').Casio;
 var CQL = require('../../').CQL;
 
-var options = {
+var conn_options = {
+  hosts:['127.0.0.1:9160'],
+  keyspace:'casio',
+  use_bigints: true
+}
 
-    hosts:['127.0.0.1:9160'],
-    keyspace:'casio',
-    use_bigints: true,
+var options = {
     consistency:{
         select:'ONE',
         insert:'ONE',
@@ -15,7 +17,15 @@ var options = {
     keyAlias: 'petId'
 }
 
-var Pet = (new Casio(options)).model('Pet', options);
+var casio = new Casio(conn_options);
+
+if (process.env.NODE_ENV && process.env.NODE_ENV==='debug'){
+  casio.on('log', function (level, msg, details) {
+    console.log(level, msg);
+  });
+}
+
+var Pet = casio.model('Pet', options);
 
 Pet.property('petId', String, {
     primary:true
