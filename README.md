@@ -12,7 +12,7 @@ Caveats Emptor
 Modeling
 --------
 
-The library support modeling two types of Objects.
+This library supports modeling two types of Objects.
 
 ##Model##
 You can think of this a traditional Model in the ORM-sense.
@@ -303,6 +303,15 @@ Test Suite
 Pre-requisites: 
 
 - Standalone Cassandra server running on localhost:9160
+- Creating this keyspace:
+
+~~~
+
+CREATE KEYSPACE casio WITH
+    strategy_class=SimpleStrategy AND
+    strategy_options:replication_factor=1;
+
+~~~
 
 To run:
  
