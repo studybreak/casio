@@ -287,7 +287,8 @@ exports.test_user_get = function (test){
             test.ok(user._props.is_admin, true);
 
             // test instance method was properly set
-            test.strictEqual(user.hello(), 'Hello, ' + user.first_name + ' ' + user.last_name + ' (' + user.email + ')');
+            test.strictEqual(user.hello(), 
+              'Hello, ' + user.first_name + ' ' + user.last_name + ' (' + user.email + ')');
             next();
         });
 
