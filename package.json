@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "async": "0.1.22",
-    "cassandra-client": "git://github.com/studybreak/node-cassandra-client#7f825a1892",
+    "cassandra-client": "git://github.com/studybreak/node-cassandra-client#41b9b7d",
     "underscore": "1.3.3"
   },
   "devDependencies": {
