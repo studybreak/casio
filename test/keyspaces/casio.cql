@@ -59,3 +59,10 @@ CREATE COLUMNFAMILY Pet (
     updated_at timestamp
 ) WITH default_validation=text AND comparator=text;
 CREATE INDEX PetUserId ON Pet (userId);
+
+CREATE COLUMNFAMILY Shards (
+    KEY text PRIMARY KEY,
+    name text,
+    created_at timestamp,
+    updated_at timestamp
+) WITH default_validation=text AND comparator=text;

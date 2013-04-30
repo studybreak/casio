@@ -287,7 +287,7 @@ exports.test_user_get = function (test){
             test.ok(user._props.is_admin, true);
 
             // test instance method was properly set
-            test.strictEqual(user.hello(), 
+            test.strictEqual(user.hello(),
               'Hello, ' + user.first_name + ' ' + user.last_name + ' (' + user.email + ')');
             next();
         });
@@ -454,7 +454,7 @@ exports.test_user_eager = function (test){
         });
 
         person.create(function(err, results){
-          
+
             test.ok(results.created())
             USER.person = person;
             USER.update(function(err, results){
@@ -1008,4 +1008,70 @@ exports.test_friends_delete = function(test){
         test.done();
     })
 
+}
+
+
+exports.test_shards = function (test) {
+
+    var shards;
+    var rows = [
+        {name:'000', value:'Yellowman'},
+        {name:'001', value:'Bob Marley'},
+        {name:'002', value:'Barrington Levy'}
+    ];
+    var rows1 = [
+        {name:'003', value:'Jack Hannah'},
+        {name:'004', value:'Billy Horton'},
+        {name:'005', value:'James Taylor'}
+    ];
+    var rows2 = [
+        {name:'000', value:'Harley Towns'},
+        {name:'006', value:'Martha Garret'},
+        {name:'005', value:'A. Jason Bales'}
+    ];
+
+    var order = [];
+    order.push(function(next){
+        shards = new model.Shards('key');
+        shards.set(rows);
+        shards.update(function(err, results){
+            test.ok(shards.created);
+            next();
+        })
+    })
+    order.push(function(next){
+        shards = new model.Shards('key:1');
+        shards.set(rows1);
+        shards.update(function(err, results){
+            test.ok(shards.created);
+            next();
+        })
+    })
+    order.push(function(next){
+        shards = new model.Shards('key:2');
+        shards.set(rows2);
+        shards.update(function(err, results){
+            test.ok(shards.created);
+            next();
+        })
+    })
+    order.push(function(next){
+        // get rid of yellowman since
+        // he's creepy...
+        shards.delete(['000'], function(err, results){
+            next();
+        })
+
+    });
+    order.push(function(next){
+        shards = new model.Shards('key');
+        shards.range(function(err, results){
+            test.equal(shards.rowCount(), 7);
+            test.less
+            next();
+        })
+    });
+    async.series(order, function(err, results){
+        test.done();
+    });
 }
