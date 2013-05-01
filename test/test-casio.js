@@ -1067,7 +1067,7 @@ exports.test_shards = function (test) {
         shards = new model.Shards('key');
         shards.range(function(err, results){
             test.equal(shards.rowCount(), 7);
-            test.less
+            test.ok(shards.rows()[0].name < shards.rows()[1].name);
             next();
         })
     });
