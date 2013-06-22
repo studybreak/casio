@@ -12,7 +12,7 @@
     "test": "./test/testsuite.sh"
   },
   "engines": {
-    "node": "~0.6.7"
+    "node": ">=0.8.0"
   },
   "dependencies": {
     "async": "0.1.22",
