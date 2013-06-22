@@ -2,7 +2,7 @@
   "author": "Greg Melton",
   "name": "casio",
   "description": "ODM for Cassandra",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/studybreak/casio",
   "repository": {
     "type": "git",
